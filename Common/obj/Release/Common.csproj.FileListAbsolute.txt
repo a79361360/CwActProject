@@ -1,0 +1,14 @@
+E:\SignJect\CwActProject\Common\bin\Release\Common.dll
+E:\SignJect\CwActProject\Common\bin\Release\Common.pdb
+E:\SignJect\CwActProject\Common\bin\Release\MySql.Data.dll
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.Mvc.dll
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.WebPages.dll
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.WebPages.Deployment.dll
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.Mvc.xml
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.WebPages.xml
+E:\SignJect\CwActProject\Common\bin\Release\System.Web.WebPages.Deployment.xml
+E:\SignJect\CwActProject\Common\bin\Release\zh-Hans\System.Web.Mvc.resources.dll
+E:\SignJect\CwActProject\Common\bin\Release\zh-Hans\System.Web.WebPages.resources.dll
+E:\SignJect\CwActProject\Common\bin\Release\zh-Hans\System.Web.WebPages.Deployment.resources.dll
+E:\SignJect\CwActProject\Common\obj\Release\Common.dll
+E:\SignJect\CwActProject\Common\obj\Release\Common.pdb
