@@ -1,31 +1,281 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model Model.ViewModel.V_IndexDto
+@{
+    ViewBag.Title = "About";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<title>流量800支撑平台</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var gener = '@Model.genner';    //推广类型 分享推广|关注推广
+    var sharenum = 0;               //分享次数
+    var gz = @Model.gz;             //用来表示是否关注公众号
+    var area = @Model.areatype;     //地区1宁德2莆田
+    $(function () {
+        $("#btn").bind("click", function () {
+            var phone = $("#phone").val();   //手机号码
+            var g = gener.split("|");
+            if (!telRuleCheck2(phone)) { alert("请输入正确的手机号码"); return }
+            if (parseInt(sharenum)<1&&g[0]=="1") { alert("请进行分享后再进行兑换");_system._guide('div_fx',true); return }
+            if (parseInt(gz)<1&&g[1]=="1") { alert("您需要先关注一下我们的微信众公号");_system._guide('div_gz',true); return }
+            var ctype = $(this).getUrlParam("ctype");
+            var issue = $(this).getUrlParam("issue");
+            var openid = $("#hid_openid").val();
+            $.getJSON("/Home/SignPhoneFilter_gz", { phone: phone,ctype:ctype,issue:issue,openid:openid,area:area }, function (ret) {
+                alert(ret.msg);
+            })
+        })
+        //手机号码格式验证
+        telRuleCheck2 = function (string) {
+            var pattern = /^1[34578]\d{9}$/;
+            if (pattern.test(string)) {
+                return true;
+            }
+            return false;
+        };
+        //隐藏遮层
+        hidemask = function(id){
+            _system.$("cover").style.display="none";
+            _system.$(id).style.display="none"; _system.$("cover").onclick=null; window.onresize=null;
+        }
+        //改变背景
+        chg_bg = function(){
+            var bgurl = '@Model.bgurl';
+            var btnurl = '@Model.btnurl';
+            if(bgurl!=""){
+                $(".bg")[0].style.backgroundImage="url("+bgurl+")";
+                //$(".btn_1")[0].style.backgroundImage="url("+btnurl+")";
+            }
+        }
+        chg_bg();   //初始调用，改变背景图
+    })
+</script>
+<style type="text/css">
+    .bg {
+        width: 100%;
+        background-image: url(../Content/Img/bg_1.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        height:0;
+        padding-bottom:177.5%;
+    }
+    .div_c {
+        padding-top:104%;
+    }
+    .btn_1 {
+        background-image: url(../Content/Img/btn_1.png);
+        background-size:cover;
+        height: 35px;
+        width: 85px;
+        display:inline-block;
+    }
+</style>
+<style type="text/css">
+    #cover {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 18888;
+        background-color: #000000;
+        opacity: 0.7;
+    }
+    #div_gz {
+        display: none;
+        position: absolute;
+        right: 0;
+        left:0;
+        text-align:center;
+        top: 5px;
+        z-index: 19999;
+    }
+    #div_fx {
+        display: none;
+        position: absolute;
+        right: 18px;
+        top: 5px;
+        z-index: 19999;
+    }
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+    #div_fx img {
+        width: 260px;
+        height: 180px;
+    }
+</style>
+<div class="bg">
+    <input id="hid_openid" value="@Model.openid" type="hidden" />
+    <form class="form-horizontal div_c" role="form">
+            <div class="col-sm-6">
+                <input type="tel" class="form-control form-bgc" id="phone" placeholder="请输入你的手机号码" style="width: 60%; margin: 8px auto;">
+            </div>
+            <div class="col-sm-4" style="text-align:center">
+                <span id="btn" class="btn_1"></span>
+            </div>
+    </form>
 </div>
+<div id="cover"></div>
+<div id="div_fx"><img src="/Content/Img/guide1.png"></div>
+<div id="div_gz"><img src="@Model.qrcodeurl"></div>
+
+
+@*<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';"></div>*@
+<script type="text/javascript">
+    $(function () {
+        //_system._guide(true);   //调用遮层
+        wx.config({
+            debug: false,
+            appId: '@Model.wx_appid',
+            timestamp: @Model.timestamp,
+            nonceStr: '@Model.noncestr',
+            signature: '@Model.signatrue',
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'onMenuShareQQ',
+              'onMenuShareWeibo',
+              'onMenuShareQZone',
+              'hideMenuItems',
+              'showMenuItems',
+              'hideAllNonBaseMenuItem',
+              'showAllNonBaseMenuItem',
+              'translateVoice',
+              'startRecord',
+              'stopRecord',
+              'onVoiceRecordEnd',
+              'playVoice',
+              'onVoicePlayEnd',
+              'pauseVoice',
+              'stopVoice',
+              'uploadVoice',
+              'downloadVoice',
+              'chooseImage',
+              'previewImage',
+              'uploadImage',
+              'downloadImage',
+              'getNetworkType',
+              'openLocation',
+              'getLocation',
+              'hideOptionMenu',
+              'showOptionMenu',
+              'closeWindow',
+              'scanQRCode',
+              'chooseWXPay',
+              'openProductSpecificView',
+              'addCard',
+              'chooseCard',
+              'openCard'
+            ]
+        });
+        wx.ready(function () {
+            // 2. 分享接口
+            // 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
+            wx.onMenuShareAppMessage({
+                title: '@Model.fx_title',
+                desc: '@Model.fx_descride',
+                link: '@Model.fx_linkurl',
+                imgUrl: '@Model.fx_imgurl',
+                trigger: function (res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                    //alert('用户点击发送给朋友');
+                },
+                success: function (res) {
+                    sharenum += 1;
+                    hidemask('div_fx');
+                    //alert('已分享');
+                },
+                cancel: function (res) {
+                    //alert('已取消');
+                },
+                fail: function (res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+            // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+            wx.onMenuShareTimeline({
+                title: '@Model.fx_title',
+                link: '@Model.fx_linkurl',
+                imgUrl: '@Model.fx_imgurl',
+                trigger: function (res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                    //alert('用户点击分享到朋友圈');
+                },
+                success: function (res) {
+                    sharenum += 1;
+                    hidemask('div_fx');
+                    //alert('已分享');
+                },
+                cancel: function (res) {
+                    //alert('已取消');
+                },
+                fail: function (res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+            // 2.3 监听“分享到QQ”按钮点击、自定义分享内容及分享结果接口
+            wx.onMenuShareQQ({
+                title: '@Model.fx_title',
+                desc: '@Model.fx_descride',
+                link: '@Model.fx_linkurl',
+                imgUrl: '@Model.fx_imgurl',
+                trigger: function (res) {
+                    alert('用户点击分享到QQ');
+                },
+                complete: function (res) {
+                    alert(JSON.stringify(res));
+                },
+                success: function (res) {
+                    alert('已分享');
+                },
+                cancel: function (res) {
+                    alert('已取消');
+                },
+                fail: function (res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+        });
+    })
+    var _system={
+        $:function(id){return document.getElementById(id);},
+        _client:function(){
+            return {
+                w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight,
+                bw:document.documentElement.clientWidth,bh:document.documentElement.clientHeight
+            };
+        },
+        _scroll:function(){
+            return {
+                x:document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft,
+                y:document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop
+            };
+        },
+        _cover:function(show){
+            if(show){
+                this.$("cover").style.display="block";
+                this.$("cover").style.width=(this._client().bw>this._client().w?this._client().bw:this._client().w)+"px";
+                this.$("cover").style.height=(this._client().bh>this._client().h?this._client().bh:this._client().h)+"px";
+            }else{
+                this.$("cover").style.display="none";
+            }
+        },
+        _guide:function(id,click){
+            this._cover(true);
+            this.$(id).style.display="block";
+            this.$(id).style.top=(_system._scroll().y+5)+"px";
+            if(id=="div_gz")
+                this.$(id).style.margin="auto";
+            window.onresize=function(){_system._cover(true);_system.$(id).style.top=(_system._scroll().y+5)+"px";};
+            if(click){_system.$("cover").onclick=function(){
+                _system._cover();
+                _system.$(id).style.display="none"; _system.$("cover").onclick=null; window.onresize=null;
+            };
+            }
+        },
+        _zero:function(n){
+            return n<0?0:n;
+        }
+    }
+</script>
